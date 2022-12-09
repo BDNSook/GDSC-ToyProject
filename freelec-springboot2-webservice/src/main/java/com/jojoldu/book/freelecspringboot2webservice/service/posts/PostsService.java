@@ -89,8 +89,8 @@ public class PostsService {
             }
         }
     }
-    public Boolean fileDelete(Posts post){
 
+    public Boolean fileDelete(Posts post){
         File file = new File(System.getProperty("user.dir")
                 + "\\src\\main\\resources\\static\\images\\" + post.getFileName());
         if (file.exists()) {
@@ -140,7 +140,6 @@ public class PostsService {
         //찾은 엔티티 data Dto에 담아 반환 (view에 뿌릴거니까 Dto)
         return new PostsUpdateResDto(entity);
     }
-
 
     @Transactional(readOnly = true)
     public List<PostsListResponseDto> findAllDesc() {

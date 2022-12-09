@@ -8,6 +8,7 @@ import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsResponseDto;
 import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsSaveRequestDto;
 import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,9 +50,8 @@ public class PostsApiController {
 
     //게시판 조회 기능
     @GetMapping("/{id}")
-    public PostsResponseDto findById(@PathVariable Long id) {
+    public PostsResponseDto read(@PathVariable Long id) {
         return postsService.findById(id);
-
     }
 
     @DeleteMapping("/{id}")
@@ -59,6 +59,4 @@ public class PostsApiController {
         postsService.delete(id);
         return id;
     }
-
-
 }

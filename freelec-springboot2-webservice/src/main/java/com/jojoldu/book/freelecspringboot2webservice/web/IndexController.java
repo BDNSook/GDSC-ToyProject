@@ -4,6 +4,7 @@ import com.jojoldu.book.freelecspringboot2webservice.config.auth.LoginUser;
 import com.jojoldu.book.freelecspringboot2webservice.config.auth.dto.SessionUser;
 import com.jojoldu.book.freelecspringboot2webservice.domain.user.User;
 import com.jojoldu.book.freelecspringboot2webservice.service.posts.PostsService;
+import com.jojoldu.book.freelecspringboot2webservice.web.dto.CommentsResponseDto;
 import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsResponseDto;
 import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsUpdateResDto;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -51,10 +53,22 @@ public class IndexController {
     }
 
     @GetMapping("/posts/read/{id}")
-    public String postView(@PathVariable Long id, Model model) {
-        PostsResponseDto responseDto = postsService.findById(id);
-        model.addAttribute("post", responseDto);
+    public String postRead(@PathVariable Long id, @LoginUser SessionUser user, Model model) {
+        PostsResponseDto postsResponseDto = postsService.findById(id);
+        List<CommentsResponseDto> comments = postsResponseDto.getComments();
+
+        if (comments != null && !comments.isEmpty()) {
+            model.addAttribute("comments", comments);
+        }
+
+        if (user != null) {
+            model.addAttribute("user", user.getName());
+
+            if (postsResponseDto.getUserId().equals(user.getUserId())) {
+                model.addAttribute("author", true);
+            }
+        }
+        model.addAttribute("post", postsResponseDto);
         return "posts-read";
     }
-
 }
