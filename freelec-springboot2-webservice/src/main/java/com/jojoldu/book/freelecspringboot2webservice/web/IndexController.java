@@ -6,10 +6,12 @@ import com.jojoldu.book.freelecspringboot2webservice.domain.user.User;
 import com.jojoldu.book.freelecspringboot2webservice.service.posts.PostsService;
 import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpSession;
 
@@ -39,10 +41,15 @@ public class IndexController {
     }
 
     @GetMapping("/posts/update/{id}")
-    public String postUpdate(@PathVariable Long id, Model model) {
+    public String postUpdate(@PathVariable Long id, @LoginUser SessionUser user, Model model) {
+        Long userId = user.getUserId();
         PostsResponseDto dto = postsService.findById(id);
+        if (!(postsService.isAuthor(userId, id))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
         model.addAttribute("post", dto);
 
         return "posts-update";
     }
+
 }

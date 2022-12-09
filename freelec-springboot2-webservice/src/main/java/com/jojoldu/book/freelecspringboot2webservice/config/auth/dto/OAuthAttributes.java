@@ -58,13 +58,13 @@ public class OAuthAttributes {
                 .build();
     }
 
-    //User 엔티티 생성 (시점 = 처음 가입시)
+    //User 엔티티 생성 (시점 = 처음 가입시) //-> 이거 나중에 guset -> user로 부여하고 나머지를 guset 처리
     public User toEntity() {
         return User.builder()
                 .name(name)
                 .email(email)
                 .picture(picture)
-                .role(Role.GUEST) //기본 권한 GUEST로 부여
+                .role(Role.USER) //기본 권한 USER로 부여
                 .build();
     }
 

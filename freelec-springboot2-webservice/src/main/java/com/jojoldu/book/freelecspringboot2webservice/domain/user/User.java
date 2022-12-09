@@ -28,6 +28,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private Role role;
 
+
     @Builder
     public User(String name, String email, String picture, Role role) {
 

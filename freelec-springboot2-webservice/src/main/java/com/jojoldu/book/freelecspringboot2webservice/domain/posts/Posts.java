@@ -1,11 +1,13 @@
 package com.jojoldu.book.freelecspringboot2webservice.domain.posts;
 
 import com.jojoldu.book.freelecspringboot2webservice.domain.BaseTimeEntity;
+import com.jojoldu.book.freelecspringboot2webservice.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.awt.*;
 
 //*어노테이션 순서 - 주요 어노테이션을 클래스와 가깝게
 
@@ -26,17 +28,26 @@ public class Posts extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    private String author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User author;
+
+    @Column
+    private String image;
+
 
     @Builder
-    public Posts(String title, String content, String author) {
+    public Posts(String title, String content, User user, String image) {
         this.title = title;
         this.content = content;
-        this.author = author;
+        this.author = user;
+        this.image = image;
     }
+
 
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
+       // this.image = image;
     }
 }
