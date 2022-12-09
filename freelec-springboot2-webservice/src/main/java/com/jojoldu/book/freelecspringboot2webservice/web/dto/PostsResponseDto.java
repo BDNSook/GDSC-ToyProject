@@ -5,19 +5,19 @@ import lombok.Getter;
 
 @Getter
 public class PostsResponseDto {
-    //Entity의 필드 중 일부만 사용 -> 생성자로 엔티티 받아서 필요한 필드만 골라 사용
+    //특정 id 게시글 조회할 때 게시글 정보 담을 dto
 
     private Long id;
     private String title;
     private String content;
     private String author;
-    private String image;
+    private String filePath; //img 태그 src에 매핑시켜 로컬 파일 사용
 
     public PostsResponseDto(Posts entity) {
         this.id = entity.getId();
         this.title = entity.getTitle();
         this.content = entity.getContent();
         this.author = entity.getAuthor().getName();
-        this.image = entity.getImage();
+        this.filePath = entity.getFilePath();
     }
 }

@@ -5,6 +5,7 @@ import com.jojoldu.book.freelecspringboot2webservice.config.auth.dto.SessionUser
 import com.jojoldu.book.freelecspringboot2webservice.domain.user.User;
 import com.jojoldu.book.freelecspringboot2webservice.service.posts.PostsService;
 import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsResponseDto;
+import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsUpdateResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -25,10 +26,7 @@ public class IndexController {
     public String index(Model model, @LoginUser SessionUser user){
         model.addAttribute("posts", postsService.findAllDesc());
         //findAllDesc()로 가져온 결과를 posts 객체로 -> index에 전달
-        //SessionUser user = (SessionUser) httpSession.getAttribute("user");
-        //로그인 성공했다면 httpSession에 SessionUser 객체 저장돼 있을 것
 
-        //user자체가 이미 SessionUser로 받아와서 바로 체크 가능
         if (user != null) { //세션에 저장된 값이 있을 경우에만 model에 userName 등록
             model.addAttribute("loginUserName", user.getName());
         }
@@ -43,13 +41,20 @@ public class IndexController {
     @GetMapping("/posts/update/{id}")
     public String postUpdate(@PathVariable Long id, @LoginUser SessionUser user, Model model) {
         Long userId = user.getUserId();
-        PostsResponseDto dto = postsService.findById(id);
+        PostsUpdateResDto dto = postsService.findForUpdate(id);
         if (!(postsService.isAuthor(userId, id))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         model.addAttribute("post", dto);
 
         return "posts-update";
+    }
+
+    @GetMapping("/posts/read/{id}")
+    public String postView(@PathVariable Long id, Model model) {
+        PostsResponseDto responseDto = postsService.findById(id);
+        model.addAttribute("post", responseDto);
+        return "posts-read";
     }
 
 }
