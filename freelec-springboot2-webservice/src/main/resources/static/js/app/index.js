@@ -12,7 +12,9 @@ var main = { //main이란 객체 생성해서 function 유효 범위 선언
             $('#btn-delete').on('click', function () {
                 _this.delete();
             });
-
+            $('#btn-comment-save').on('click', function () {
+                _this.commentSave();
+            });
     },
     save: function () {
         let data = {
@@ -72,7 +74,6 @@ var main = { //main이란 객체 생성해서 function 유효 범위 선언
     <!--delete 기능 추가-->
     delete : function () {
         var id = $('#id').val();
-
         $.ajax({
             type: 'DELETE', <!--삭제 관련 http 메소드인 DELETE-->
             url: '/api/v1/posts/'+id,
@@ -84,7 +85,31 @@ var main = { //main이란 객체 생성해서 function 유효 범위 선언
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });
-    }
+    },
+    <!--comment save 기능 추가-->
+    commentSave : function () {
+        const data = {
+            postsId: $('#postsId').val(),
+            comment: $('#comment').val()
+        }
 
+        if (!data.comment || data.comment.trim() === "") {
+            alert("공백 또는 입력하지 않은 부분이 있습니다.");
+            return false;
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: '/api/v1/posts/' + data.postsId + '/comments',
+                dataType: 'text',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(data)
+            }).done(function () {
+                alert('댓글이 등록되었습니다.');
+                window.location.href = '/';
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        }
+    }
 };
 main.init();

@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 public class PostsUpdateRequestDto {
     private String title;
     private String content;
-
     private Boolean deleteFlag;
-
-
 
     @Builder
     public PostsUpdateRequestDto(String title, String content, String deleteFlag) {

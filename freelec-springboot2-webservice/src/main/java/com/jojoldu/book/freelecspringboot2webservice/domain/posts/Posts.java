@@ -1,6 +1,7 @@
 package com.jojoldu.book.freelecspringboot2webservice.domain.posts;
 
 import com.jojoldu.book.freelecspringboot2webservice.domain.BaseTimeEntity;
+import com.jojoldu.book.freelecspringboot2webservice.domain.comments.Comments;
 import com.jojoldu.book.freelecspringboot2webservice.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.awt.*;
+import java.util.List;
 
 //*어노테이션 순서 - 주요 어노테이션을 클래스와 가깝게
 
@@ -38,18 +40,19 @@ public class Posts extends BaseTimeEntity {
     @Column
     private String fileName;
 
-
-
+    @OneToMany(mappedBy = "posts", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id asc")  // 댓글 정렬
+    private List<Comments> comments;
 
     @Builder
-    public Posts(String title, String content, User user, String filePath, String fileName) {
+    public Posts(String title, String content, User user, String filePath, String fileName, List<Comments> comments) {
         this.title = title;
         this.content = content;
         this.author = user;
         this.filePath = filePath;
         this.fileName = fileName;
+        this.comments = comments;
     }
-
 
     public void update_content(String title, String content) {
         this.title = title;
@@ -58,7 +61,5 @@ public class Posts extends BaseTimeEntity {
     public void update_File(String filePath, String fileName) {
         this.filePath = filePath;
         this.fileName = fileName;
-
     }
-
 }
