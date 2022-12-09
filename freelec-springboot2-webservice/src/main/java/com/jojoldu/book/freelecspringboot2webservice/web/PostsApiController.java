@@ -28,16 +28,23 @@ public class PostsApiController {
         return postsService.save(requestDto, file, user);
     }
 
-    //게시판 조회 기능 -RestController
+    //게시판 목록 조회
     @GetMapping
     public List<PostsListResponseDto> getPostsList(){
         return postsService.findAllDesc();
     }
-    //게시판 수정 기능
+
+    //게시글 수정
     @PutMapping("/{id}")
-    public Long update(@PathVariable Long id, @RequestBody PostsUpdateRequestDto requestDto,
-                       @LoginUser SessionUser user) {
-        return postsService.update(id, requestDto,user);
+    public void update(@PathVariable Long id,
+                       @RequestPart(name = "p") PostsUpdateRequestDto requestDto,
+                       @RequestPart(name = "f", required = false) MultipartFile file,
+                       @LoginUser SessionUser accessUser) {
+        try{
+            postsService.update(id,requestDto,file,accessUser);
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     //게시판 조회 기능
@@ -47,7 +54,7 @@ public class PostsApiController {
 
     }
 
-    @DeleteMapping("/api/v1/posts/{id}")
+    @DeleteMapping("/{id}")
     public Long delete(@PathVariable Long id) {
         postsService.delete(id);
         return id;

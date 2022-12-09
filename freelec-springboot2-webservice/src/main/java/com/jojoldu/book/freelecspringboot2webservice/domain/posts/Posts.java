@@ -33,21 +33,32 @@ public class Posts extends BaseTimeEntity {
     private User author;
 
     @Column
-    private String image;
+    private String filePath;
+
+    @Column
+    private String fileName;
+
+
 
 
     @Builder
-    public Posts(String title, String content, User user, String image) {
+    public Posts(String title, String content, User user, String filePath, String fileName) {
         this.title = title;
         this.content = content;
         this.author = user;
-        this.image = image;
+        this.filePath = filePath;
+        this.fileName = fileName;
     }
 
 
-    public void update(String title, String content) {
+    public void update_content(String title, String content) {
         this.title = title;
         this.content = content;
-       // this.image = image;
     }
+    public void update_File(String filePath, String fileName) {
+        this.filePath = filePath;
+        this.fileName = fileName;
+
+    }
+
 }
