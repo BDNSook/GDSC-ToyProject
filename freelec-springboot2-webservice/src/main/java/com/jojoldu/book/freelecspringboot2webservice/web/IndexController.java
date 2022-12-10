@@ -66,8 +66,6 @@ public class IndexController {
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);
         }
-
-        model.addAttribute("post", postsResponseDto);
         return "posts-read";
     }
 }
