@@ -34,6 +34,7 @@ public class IndexController {
 
         return "index"; //머스테치 플러그인 -> 앞 경로 + 뒤 파일 확장자 명 자동 생략 가능
     }
+
     @GetMapping("/posts/save")//앞 슬래쉬 까먹지 말기
     public String postSave(){
         return "post-save"; //마찬가지로 URL (/posts/save) - 머스태치 파일 매핑
@@ -52,29 +53,32 @@ public class IndexController {
     }
 
     @GetMapping("/posts/read/{id}")
-    public String postRead(@PathVariable Long id, @LoginUser SessionUser user, Model model) {
+    public String postRead(@PathVariable Long id, Model model, @LoginUser SessionUser user) {
+        if(user != null){
+            if (postsService.isAuthor(id, user.getUserId())) {
+                model.addAttribute("writer", user.getUserId()); //글 작성자일 경우에만 수정, 삭제버튼 추가
+            }
+        }
         PostsResponseDto postsResponseDto = postsService.findById(id);
         List<CommentsResponseDto> comments = postsResponseDto.getComments();
 
-        // 댓글 리스트
+        /* 댓글 리스트 */
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);
         }
-
-        // 사용자 관련
+        /* 사용자 관련 */
         if (user != null) {
-            model.addAttribute("user", user.getName());
+            model.addAttribute("user", user);
 
-            // 게시글 작성자 본인인지 확인
+            /* 게시글 작성자 본인인지 확인 */
             if (postsResponseDto.getUserId().equals(user.getUserId())) {
-                model.addAttribute("author", true);
+                model.addAttribute("writer", true);
             }
-
-            //댓글 작성자 본인인지 확인
+            /* 댓글 작성자 본인인지 확인 */
             for (int i = 0; i < comments.size(); i++) {
                 //댓글 작성자 id와 현재 사용자 id를 비교해 true/false 판단
                 boolean isWriter = comments.get(i).equals(user.getUserId());
-                //log.info("isWriter? : " + isWriter);
+                // log.info("isWriter? : " + isWriter);
                 model.addAttribute("isWriter",isWriter);
             }
         }
