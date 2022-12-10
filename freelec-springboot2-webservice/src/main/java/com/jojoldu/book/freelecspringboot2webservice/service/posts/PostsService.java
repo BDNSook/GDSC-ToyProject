@@ -160,14 +160,14 @@ public class PostsService {
     }
 
     //글 수정할 때 작성자인지 확인
-    public Boolean isAuthor(Long userId, Long postId){
-        Posts post = postRepository.findById(postId)
-                .orElseThrow(()-> new NullPointerException());
-        if (userId.equals(post.getAuthor().getId())) {
-            //System.out.println("1열람자"+userId+"     1글 작성자: "+post.getAuthor().getId());
-            return true;
-        }
-        //System.out.println("2열람자"+userId+"    2글 작성자: "+post.getAuthor().getId());
-        return false;
-    }
+//    public Boolean isAuthor(Long userId, Long postId){
+//        Posts post = postRepository.findById(postId)
+//                .orElseThrow(()-> new NullPointerException());
+//        if (userId.equals(post.getAuthor().getId())) {
+//            //System.out.println("1열람자"+userId+"     1글 작성자: "+post.getAuthor().getId());
+//            return true;
+//        }
+//        //System.out.println("2열람자"+userId+"    2글 작성자: "+post.getAuthor().getId());
+//        return false;
+//    }
 }
