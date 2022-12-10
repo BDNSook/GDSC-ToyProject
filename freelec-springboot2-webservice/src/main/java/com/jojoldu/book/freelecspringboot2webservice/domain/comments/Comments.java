@@ -30,4 +30,9 @@ public class Comments extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+
+    // 댓글 수정을 위한 setter
+    public void update(String comment) {
+        this.comment = comment;
+    }
 }
