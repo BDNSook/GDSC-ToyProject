@@ -19,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     //[URL별 권한 관리] 설정 옵션 진입점
                     .authorizeRequests()
-                    .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**").permitAll() //권한 관리 대상을 지정하는 옵션 - 전체 열람 권한
+                    .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**","/posts/read/**").permitAll() //권한 관리 대상을 지정하는 옵션 - 전체 열람 권한
                     .antMatchers("/api/v1/**").hasRole(Role.USER.name())
                     //위에서 별도 설정한 URL제외 나머지 URL 어떻게 처리 할 것인지
                     .anyRequest().authenticated() //나머지 URL은 인증된 사용자(=로그인 한 사람)에게만 보여줌

@@ -17,7 +17,7 @@ public class PostsUpdateResDto {
         this.id = entity.getId();
         this.title = entity.getTitle();
         this.content = entity.getContent();
-        this.fileName = entity.getFileName();
+        this.fileName = entity.getFileName().split("_",2)[1];
     }
 }
 
