@@ -5,14 +5,11 @@ import com.jojoldu.book.freelecspringboot2webservice.config.auth.dto.SessionUser
 import com.jojoldu.book.freelecspringboot2webservice.service.posts.PostsService;
 import com.jojoldu.book.freelecspringboot2webservice.web.dto.CommentsResponseDto;
 import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsResponseDto;
-import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsUpdateResDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -41,11 +38,7 @@ public class IndexController {
 
     @GetMapping("/posts/update/{id}")
     public String postUpdate(@PathVariable Long id, @LoginUser SessionUser user, Model model) {
-        Long userId = user.getUserId();
-        PostsUpdateResDto dto = postsService.findForUpdate(id);
-        if (!(postsService.isAuthor(userId, id))) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+        PostsResponseDto dto = postsService.findById(id);
         model.addAttribute("post", dto);
 
         return "posts-update";
@@ -53,20 +46,23 @@ public class IndexController {
 
     @GetMapping("/posts/read/{id}")
     public String postRead(@PathVariable Long id, Model model, @LoginUser SessionUser user) {
-        if(user != null){
-            if (postsService.isAuthor(id, user.getUserId())) {
-                model.addAttribute("writer", user.getUserId()); //글 작성자일 경우에만 수정, 삭제버튼 추가
-            }
-        }
         PostsResponseDto postsResponseDto = postsService.findById(id);
-        model.addAttribute("post", postsResponseDto);
         List<CommentsResponseDto> comments = postsResponseDto.getComments();
 
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);
         }
 
+        /* 사용자 관련 */
+        if (user != null) {
+            model.addAttribute("user", user);
 
+            /* 게시글 작성자 본인인지 확인 */
+            if (postsResponseDto.getUserId().equals(user.getUserId())) {
+                model.addAttribute("writer", true);
+            }
+        }
+        model.addAttribute("post", postsResponseDto);
         return "posts-read";
     }
 }
