@@ -35,6 +35,7 @@ public class IndexController {
 
         return "index"; //머스테치 플러그인 -> 앞 경로 + 뒤 파일 확장자 명 자동 생략 가능
     }
+
     @GetMapping("/posts/save")//앞 슬래쉬 까먹지 말기
     public String postSave(){
         return "post-save"; //마찬가지로 URL (/posts/save) - 머스태치 파일 매핑
@@ -53,22 +54,20 @@ public class IndexController {
     }
 
     @GetMapping("/posts/read/{id}")
-    public String postRead(@PathVariable Long id, @LoginUser SessionUser user, Model model) {
+    public String postRead(@PathVariable Long id, Model model, @LoginUser SessionUser user) {
+
+        if (postsService.isAuthor(id, user.getUserId())) {
+            model.addAttribute("writer", user.getUserId()); //글 작성자일 경우에만 수정, 삭제버튼 추가
+        }
         PostsResponseDto postsResponseDto = postsService.findById(id);
+        model.addAttribute("post", postsResponseDto);
         List<CommentsResponseDto> comments = postsResponseDto.getComments();
 
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);
         }
 
-        if (user != null) {
-            model.addAttribute("user", user.getName());
 
-            if (postsResponseDto.getUserId().equals(user.getUserId())) {
-                model.addAttribute("author", true);
-            }
-        }
-        model.addAttribute("post", postsResponseDto);
         return "posts-read";
     }
 }

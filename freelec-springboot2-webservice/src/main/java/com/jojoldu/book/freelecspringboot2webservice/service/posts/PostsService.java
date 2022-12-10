@@ -29,32 +29,13 @@ public class PostsService {
     @Transactional
     public Long save(PostsSaveRequestDto requestDto, MultipartFile file ,SessionUser user) throws IOException {
         User author = userRepository.getById(user.getUserId());
-        //이미지 저장할 파일 경로 생성
-        /*String storePath = System.getProperty("user.dir")+"\\src\\main\\resources\\static\\images";
-        File storeFolder = new File(storePath);
-        //헤당 폴더 없는 경우에만 생성
-        if (!storeFolder.exists()) {
-            try {
-                storeFolder.mkdirs();
-            } catch (Exception e) {
-                e.getStackTrace();
-            }
-        }
-        //고유 식별자 생성
-        UUID uuid = UUID.randomUUID();
-        //파일명 생성
-        String fileName = null;
-        if (file != null) { //파일을 첨부된 경우만 이름 꺼냄
-            fileName = uuid + "_"+ file.getOriginalFilename();
-            file.transferTo(new File(storePath, fileName));
-        }*/
         String saveName = saveFile(file);
 
         return postRepository.save(Posts.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
                 .user(author)
-                .filePath("/images/" + saveName)
+                .filePath("/images/"+saveName)
                 .fileName(saveName)
                 .build()).getId();
     }
@@ -63,7 +44,7 @@ public class PostsService {
     public void update(Long id, PostsUpdateRequestDto requestDto, MultipartFile file, SessionUser accessUser) throws IOException {
         Posts posts = postRepository.findById(id) //수정할 객체 id로 찾아서
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
-        System.out.println(requestDto.getDeleteFlag());
+        //System.out.println(requestDto.getDeleteFlag());
         //내용 먼저 업데이트
         posts.update_content(requestDto.getTitle(),requestDto.getContent());
         //3. file이 null인지 확인
