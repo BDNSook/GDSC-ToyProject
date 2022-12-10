@@ -55,9 +55,10 @@ public class IndexController {
 
     @GetMapping("/posts/read/{id}")
     public String postRead(@PathVariable Long id, Model model, @LoginUser SessionUser user) {
-
-        if (postsService.isAuthor(id, user.getUserId())) {
-            model.addAttribute("writer", user.getUserId()); //글 작성자일 경우에만 수정, 삭제버튼 추가
+        if(user != null){
+            if (postsService.isAuthor(id, user.getUserId())) {
+                model.addAttribute("writer", user.getUserId()); //글 작성자일 경우에만 수정, 삭제버튼 추가
+            }
         }
         PostsResponseDto postsResponseDto = postsService.findById(id);
         model.addAttribute("post", postsResponseDto);
