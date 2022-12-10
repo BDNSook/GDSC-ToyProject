@@ -66,22 +66,7 @@ public class IndexController {
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);
         }
-        /* 사용자 관련 */
-        if (user != null) {
-            model.addAttribute("user", user);
 
-            /* 게시글 작성자 본인인지 확인 */
-            if (postsResponseDto.getUserId().equals(user.getUserId())) {
-                model.addAttribute("writer", true);
-            }
-            /* 댓글 작성자 본인인지 확인 */
-            for (int i = 0; i < comments.size(); i++) {
-                //댓글 작성자 id와 현재 사용자 id를 비교해 true/false 판단
-                boolean isWriter = comments.get(i).equals(user.getUserId());
-                // log.info("isWriter? : " + isWriter);
-                model.addAttribute("isWriter",isWriter);
-            }
-        }
         model.addAttribute("post", postsResponseDto);
         return "posts-read";
     }
