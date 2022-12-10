@@ -5,6 +5,7 @@ import com.jojoldu.book.freelecspringboot2webservice.config.auth.dto.SessionUser
 import com.jojoldu.book.freelecspringboot2webservice.service.posts.PostsService;
 import com.jojoldu.book.freelecspringboot2webservice.web.dto.CommentsResponseDto;
 import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsResponseDto;
+import com.jojoldu.book.freelecspringboot2webservice.web.dto.PostsUpdateResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +39,7 @@ public class IndexController {
 
     @GetMapping("/posts/update/{id}")
     public String postUpdate(@PathVariable Long id, @LoginUser SessionUser user, Model model) {
-        PostsResponseDto dto = postsService.findById(id);
+        PostsUpdateResDto dto = postsService.findForUpdate(id);
         model.addAttribute("post", dto);
 
         return "posts-update";
