@@ -21,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Controller
 public class IndexController {
-
     private final PostsService postsService;
 
     @GetMapping("/") //URL접속 시 기본페이지(/)에 index 템플릿 매핑
@@ -57,15 +56,26 @@ public class IndexController {
         PostsResponseDto postsResponseDto = postsService.findById(id);
         List<CommentsResponseDto> comments = postsResponseDto.getComments();
 
+        // 댓글 리스트
         if (comments != null && !comments.isEmpty()) {
             model.addAttribute("comments", comments);
         }
 
+        // 사용자 관련
         if (user != null) {
             model.addAttribute("user", user.getName());
 
+            // 게시글 작성자 본인인지 확인
             if (postsResponseDto.getUserId().equals(user.getUserId())) {
                 model.addAttribute("author", true);
+            }
+
+            //댓글 작성자 본인인지 확인
+            for (int i = 0; i < comments.size(); i++) {
+                //댓글 작성자 id와 현재 사용자 id를 비교해 true/false 판단
+                boolean isWriter = comments.get(i).equals(user.getUserId());
+                //log.info("isWriter? : " + isWriter);
+                model.addAttribute("isWriter",isWriter);
             }
         }
         model.addAttribute("post", postsResponseDto);

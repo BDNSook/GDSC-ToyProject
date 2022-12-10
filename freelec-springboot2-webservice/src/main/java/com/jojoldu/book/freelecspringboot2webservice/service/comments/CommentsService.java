@@ -33,4 +33,18 @@ public class CommentsService {
 
         return commentsRequestDto.getId();
     }
+
+    @Transactional
+    public void commentUpdate(Long id, CommentsRequestDto commentsRequestDto) {
+        Comments comments = commentRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("해당 댓글이 존재하지 않습니다."+ id));
+        comments.update(commentsRequestDto.getComment());
+    }
+
+    @Transactional
+    public void commentDelete(Long id) {
+        Comments comments = commentRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("해당 댓글이 존재하지 않습니다."+ id));
+        commentRepository.delete(comments);
+    }
 }
